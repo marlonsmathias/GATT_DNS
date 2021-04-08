@@ -4,14 +4,18 @@
 # System requirements:
 
 Matlab (tested on 2018a)
+
 gfortran (tested on 7.4.0)
+
 openmpi (tested on 2.1.1, libopenmpi-dev package)
+
 2decomp (tested on 1.5, compiled with the same compiler as the code, http://www.2decomp.org/)
 
 
 # Main files:
 
 runDNS.m
+
 This file is the one that will call all the others. The parameters file name should be defined in it.
 
 The first output contains a handle to each of the saved flows.
@@ -23,22 +27,30 @@ The parameters to be chosen are:
 caseFile -> Name of the parameters file to be called. Do not include the .m extension.
 
 runSimulation -> Whether or the the DNS will be run
+
 plotDNSDomain -> Whether or not the domain will be plotted before runtime
 
 forceRecompile -> Force the recompilation to be triggered, even if nothing has changed from previous runs.
+
 forceRecompileAll -> Force all files to be recompiled instead of just the ones that changed.
+
 displayCompiling -> Whether or not the compiler output is shown in the screen.
+
 optimizeCode -> Whether or not optimization flags will be passed to the compiler. If true, compilation will take longer but the code will run much faster.
+
 debugger -> Whether or not the gdb debugger is called at runtime. This overrides the optimization flag. The X server must be on, as one xterm window will open for each process.
+
 profiler -> Create a profile.txt file with code performance data. gprof is used. This increases the total runtime.
 
 matlabDir -> Root directory of the Matlab installation. Leave empty for auto.
+
 decompDir -> Directory where the 2decomp library is found.
 
 
 ## Parameters file
 
 parameters.m (The actual name is chosen in runDNS.m or passed as an argument)
+
 This file contains all the parameters for the simulation, both for the flow and for the numerical methods.
 
 A copy of this file is made at caseName/Fortran at runtime.
@@ -189,8 +201,7 @@ A copy of this file is made at caseName/Fortran at runtime.
 	%% Tracked points
 	% These are points that will have their variables written to the log file
 	% The mesh will also be fitted to them
-	mesh.trackedPoints = [1 1 0;
-						  2 1.5 0];
+	mesh.trackedPoints = [1 1 0; 2 1.5 0];
 	mesh.fitTrackedPoints = false; % If true, the mesh will be fitted to these points. (optional)
 	mesh.trackedNorm = true; % Normalize the values of probe points in the log file (optional, default = false).
 
@@ -239,39 +250,61 @@ A copy of this file is made at caseName/Fortran at runtime.
 ## Other Matlab files:
 
 preprocessing.m -> Calls all other preprocessing files
+
 compileFortran.m -> Calls the Fortran compliler with the correct flags
 
-Derivatives and filter matrices:
+### Derivatives and filter matrices:
+
 findDerivativeRegions.m -> Creates a map of the different regions for the derivatives
+
 finiteDifferenceCoefficients.m -> Contains the coefficients for various methods
+
 getMatrixTypeBlocks.m -> Transforms the region map into a list of blocks
+
 makeMatrices.m -> Builds the matrices for derivatives and filters, also applies the metrics
+
 prepareThomas.m -> Pre compute the Thomas algorithm coefficients from the matrices
+
 spatialFilterCoefficients.m -> Computes the spatial filter coefficients
 
-Boundary conditions:
+## Boundary conditions:
+
 findWallsForBoundaries.m -> Finds the locations of the walls in the domain
+
 getBoundaryConditions.m -> Calls the correct boundary condition routine from the source/boundaries folder
+
 initBoundaries.m -> Separates the boundaries in blocks for the different Fortran processes.
 
-Initial flow:
+### Initial flow:
+
 checkPreviousRun.m -> Checks if there are any previous run files in the folder.
+
 generateInitialFlow.m -> Contains the functions to generate the various types of initial flows.
+
 initialFlow.m -> Gets the initial flow and saves to a file.
 
-Mesh:
+### Mesh:
+
 generateMesh.m -> Contains the functions for the various types of mesh
+
 meshAddFixedPoints.m -> Finds the fixed points where a node in required
 
-Write Fortran files:
+### Write Fortran files:
+
 writeFortranBoundaries.m
+
 writeFortranDisturbances.m
+
 writeFortranMatrices.m
+
 writeFortranParameters.m
 
-Misc:
+### Misc:
+
 calcSFDregion.m -> Generates a mat file with the SFD coefficients for each node.
+
 getDomainSlices.m -> Computes the domain decomposition in the same way 2decomp does.
+
 plotDomain.m -> Shows the current domain in a plot window.
 
 ## Disturbance files:
