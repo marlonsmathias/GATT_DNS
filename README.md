@@ -45,196 +45,196 @@ A copy of this file is made at caseName/Fortran at runtime.
 
 ## Example parameters file:
 
-%% Case name
-caseName = 'testRun'; %This is the name of the folder the results are saved to.
+	%% Case name
+	caseName = 'testRun'; %This is the name of the folder the results are saved to.
 
-%% Domain decomposition
-p_row = 4;
-p_col = 1;
+	%% Domain decomposition
+	p_row = 4;
+	p_col = 1;
 
-%% Flow parameters
-flowParameters.Re = 1000;
-flowParameters.Ma = 0.5;
-flowParameters.Pr = 0.71;
-flowParameters.gamma = 1.4;
-flowParameters.T0 = 300;
+	%% Flow parameters
+	flowParameters.Re = 1000;
+	flowParameters.Ma = 0.5;
+	flowParameters.Pr = 0.71;
+	flowParameters.gamma = 1.4;
+	flowParameters.T0 = 300;
 
-%% Domain parameters
-domain.xi = -1;
-domain.xf = 5;
-domain.yi = -1;
-domain.yf = 4;
-domain.zi = 0;
-domain.zf = 1;
+	%% Domain parameters
+	domain.xi = -1;
+	domain.xf = 5;
+	domain.yi = -1;
+	domain.yf = 4;
+	domain.zi = 0;
+	domain.zf = 1;
 
-%% Flow type
-flowType.name = 'boundaryLayerIsothermal'; % Check the source/boundaries folder for available flow types.
+	%% Flow type
+	flowType.name = 'boundaryLayerIsothermal'; % Check the source/boundaries folder for available flow types.
 
-flowType.initial.type = 'uniform'; % Either uniform, blasius or file. This is the initial flow that is created if no previous run is found.
+	flowType.initial.type = 'uniform'; % Either uniform, blasius or file. This is the initial flow that is created if no previous run is found.
 
-%flowType.initial.blasiusFit = 1; % For initial type of blasius. Fits the bottom of the profile to the geometry, with a maximum slope of blasiusFit (optional)
+	%flowType.initial.blasiusFit = 1; % For initial type of blasius. Fits the bottom of the profile to the geometry, with a maximum slope of blasiusFit (optional)
 
-%flowType.initial.flowFile = 'baseflows/TSWaves/flow.mat';
-%flowType.initial.meshFile = 'baseflows/TSWaves/mesh.mat'; % Providing a mesh is optional. If no mesh is given the code assumes it is the same as the current mesh. If the given mesh is different, the flow will be interpolated to the new mesh.
-%flowType.initial.addNoise = 1e-5; % Adds white noise of this magnitude to the initial flow (optional)
-%flowType.initial.changeMach = true; % Changes the Mach number in the initial flow file if it does not match the current Mach number (optional)
-
-
-% Positions of the cavities
-flowType.cav{1}.x = [1 2];
-flowType.cav{1}.y = [-1 0];
-flowType.cav{1}.z = [-inf inf];
-
-% Positions of the roughnesses
-%flowType.rug{1}.x = [1 1.2];
-%flowType.rug{1}.y = [-0.1 0];
-%flowType.rug{1}.z = [0.3 0.8];
- 
-%flowType.rug{2}.x = [2.5 4];
-%flowType.rug{2}.y = [0.5 1];
-%flowType.rug{2}.z = [0.3 0.8];
-
-% Positions of the disturbances
-%flowType.disturb{1}.x = [0.1 0.2];
-%flowType.disturb{1}.y = [0 0];
-%flowType.disturb{1}.z = [-inf inf];
-%flowType.disturb{1}.var = 'V'; % Which variables it applies to, among UVWRE.
-%flowType.disturb{1}.type = 'periodicSine'; % Name of the disturbances file. Check the source/disturbances folder.
-%flowType.disturb{1}.extraNodes = [0 0 0 0 0 0]; % Amount of extra nodes that will be passed to the subroutine, in the following order: xi xf yi yf zi zf (optional)
-%flowType.disturb{1}.par = [1, 1e-4]; % Extra parameters to the passed to the disturbance routine. (optional)
-%flowType.disturb{1}.active = true;
-%flowType.disturb{1}.fitPoints = true; % Whether or not the mesh will be fitted to this disturbance. (optional)
-
-%% Mesh parameters
-mesh.x.n = 300;
-mesh.y.n = 200;
-mesh.z.n = 1;
-
-%mesh.x.d0 = 0.01; % If mesh.n is not provided, mesh.d0 will be used to compute n so that the base spacing of the mesh is d0
-
-% Available mesh types and their specific parameters are:
-%   uniform
-%
-%   power
-%       power
-%
-%   attractors
-%       attractorPoints
-%       attractorStrength
-%       attractorSize
-		attractorRegions (optional)
-%
-%   tanh
-%       local -> i, f, b
-%       par
-%
-%   file
-%       file
-%       fileCalcBuffer (optional)
+	%flowType.initial.flowFile = 'baseflows/TSWaves/flow.mat';
+	%flowType.initial.meshFile = 'baseflows/TSWaves/mesh.mat'; % Providing a mesh is optional. If no mesh is given the code assumes it is the same as the current mesh. If the given mesh is different, the flow will be interpolated to the new mesh.
+	%flowType.initial.addNoise = 1e-5; % Adds white noise of this magnitude to the initial flow (optional)
+	%flowType.initial.changeMach = true; % Changes the Mach number in the initial flow file if it does not match the current Mach number (optional)
 
 
-%mesh.x.type = 'uniform';
-mesh.x.type = 'attractors';
-mesh.x.attractorPoints = [0 1 2];
-mesh.x.attractorStrength = [1 1 2];
-mesh.x.attractorSize = [0.3 1 1];
-%mesh.x.attractorRegions = [3 4 5 6 1]; % Mesh refines from x1 to x2, then is constant until x3 and coarses back until x4. x5 is the strength. Each line describes one region.
-%mesh.x.type = 'file';
-%mesh.x.file = 'meshes/x.dat';
-%mesh.x.fileCalcBuffer = true; % (optional, default = false) Set to true if the mesh file does not contain the buffer zone
-mesh.x.matchFixed = true; % If true, the mesh may be slightly transformed so that nodes are present exactly at geometry corners and flow disturbances. If matchFixed=2, a pchip interpolation will be used instead of spline.
-mesh.x.periodic = false;
-mesh.x.fixPeriodicDomainSize = false; % If true, the periodic domain length will be slight reduced so that the space between nodes n and 1 is accounted for.
-mesh.x.extraRefinement = 0; % This will add n nodes between each pair of nodes. Useful for mesh refinement tests.
+	% Positions of the cavities
+	flowType.cav{1}.x = [1 2];
+	flowType.cav{1}.y = [-1 0];
+	flowType.cav{1}.z = [-inf inf];
 
-%mesh.y.type = 'power';
-%mesh.y.power = 2;
-mesh.y.type = 'attractors';
-mesh.y.attractorPoints = 0;
-mesh.y.attractorStrength = 10;
-mesh.y.attractorSize = 0.5;
-%mesh.y.type = 'file';
-%mesh.y.file = 'meshes/y.dat';
-mesh.y.matchFixed = true;
-mesh.y.periodic = false;
-mesh.y.fixPeriodicDomainSize = false;
-mesh.y.extraRefinement = 0;
+	% Positions of the roughnesses
+	%flowType.rug{1}.x = [1 1.2];
+	%flowType.rug{1}.y = [-0.1 0];
+	%flowType.rug{1}.z = [0.3 0.8];
+	 
+	%flowType.rug{2}.x = [2.5 4];
+	%flowType.rug{2}.y = [0.5 1];
+	%flowType.rug{2}.z = [0.3 0.8];
 
-mesh.z.type = 'uniform';
-mesh.z.matchFixed = true;
-mesh.z.periodic = true;
-mesh.z.fixPeriodicDomainSize = true;
-mesh.z.extraRefinement = 0;
+	% Positions of the disturbances
+	%flowType.disturb{1}.x = [0.1 0.2];
+	%flowType.disturb{1}.y = [0 0];
+	%flowType.disturb{1}.z = [-inf inf];
+	%flowType.disturb{1}.var = 'V'; % Which variables it applies to, among UVWRE.
+	%flowType.disturb{1}.type = 'periodicSine'; % Name of the disturbances file. Check the source/disturbances folder.
+	%flowType.disturb{1}.extraNodes = [0 0 0 0 0 0]; % Amount of extra nodes that will be passed to the subroutine, in the following order: xi xf yi yf zi zf (optional)
+	%flowType.disturb{1}.par = [1, 1e-4]; % Extra parameters to the passed to the disturbance routine. (optional)
+	%flowType.disturb{1}.active = true;
+	%flowType.disturb{1}.fitPoints = true; % Whether or not the mesh will be fitted to this disturbance. (optional)
 
-mesh.x.buffer.i.n = 20;
-mesh.x.buffer.i.type = 'sigmoid'; % Sigmoid or exponential
-mesh.x.buffer.i.stretching = 20;
+	%% Mesh parameters
+	mesh.x.n = 300;
+	mesh.y.n = 200;
+	mesh.z.n = 1;
 
-mesh.x.buffer.f.n = 20;
-%mesh.x.buffer.f.l = 300; % Buffer zone length can be specifiend instead of number of nodes
-mesh.x.buffer.f.type = 'sigmoid';
-mesh.x.buffer.f.stretching = 20;
-mesh.x.buffer.f.transition = 0.2;
+	%mesh.x.d0 = 0.01; % If mesh.n is not provided, mesh.d0 will be used to compute n so that the base spacing of the mesh is d0
 
-mesh.y.buffer.i.n = 0;
+	% Available mesh types and their specific parameters are:
+	%   uniform
+	%
+	%   power
+	%       power
+	%
+	%   attractors
+	%       attractorPoints
+	%       attractorStrength
+	%       attractorSize
+			attractorRegions (optional)
+	%
+	%   tanh
+	%       local -> i, f, b
+	%       par
+	%
+	%   file
+	%       file
+	%       fileCalcBuffer (optional)
 
-mesh.y.buffer.f.n = 20;
-mesh.y.buffer.f.type = 'exponential';
-mesh.y.buffer.f.stretching = 0.1;
-mesh.y.buffer.f.ramp = 20; % Defines number of nodes used to ramp up the spacing change in an exponential buffer zone (optional)
 
-mesh.z.buffer.i.n = 0;
-mesh.z.buffer.f.n = 0;
+	%mesh.x.type = 'uniform';
+	mesh.x.type = 'attractors';
+	mesh.x.attractorPoints = [0 1 2];
+	mesh.x.attractorStrength = [1 1 2];
+	mesh.x.attractorSize = [0.3 1 1];
+	%mesh.x.attractorRegions = [3 4 5 6 1]; % Mesh refines from x1 to x2, then is constant until x3 and coarses back until x4. x5 is the strength. Each line describes one region.
+	%mesh.x.type = 'file';
+	%mesh.x.file = 'meshes/x.dat';
+	%mesh.x.fileCalcBuffer = true; % (optional, default = false) Set to true if the mesh file does not contain the buffer zone
+	mesh.x.matchFixed = true; % If true, the mesh may be slightly transformed so that nodes are present exactly at geometry corners and flow disturbances. If matchFixed=2, a pchip interpolation will be used instead of spline.
+	mesh.x.periodic = false;
+	mesh.x.fixPeriodicDomainSize = false; % If true, the periodic domain length will be slight reduced so that the space between nodes n and 1 is accounted for.
+	mesh.x.extraRefinement = 0; % This will add n nodes between each pair of nodes. Useful for mesh refinement tests.
 
-%% Tracked points
-% These are points that will have their variables written to the log file
-% The mesh will also be fitted to them
-mesh.trackedPoints = [1 1 0;
-                      2 1.5 0];
-mesh.fitTrackedPoints = false; % If true, the mesh will be fitted to these points. (optional)
-mesh.trackedNorm = true; % Normalize the values of probe points in the log file (optional, default = false).
+	%mesh.y.type = 'power';
+	%mesh.y.power = 2;
+	mesh.y.type = 'attractors';
+	mesh.y.attractorPoints = 0;
+	mesh.y.attractorStrength = 10;
+	mesh.y.attractorSize = 0.5;
+	%mesh.y.type = 'file';
+	%mesh.y.file = 'meshes/y.dat';
+	mesh.y.matchFixed = true;
+	mesh.y.periodic = false;
+	mesh.y.fixPeriodicDomainSize = false;
+	mesh.y.extraRefinement = 0;
 
-logAll = false; % If true, all step will be saved to the log file. (optional)
+	mesh.z.type = 'uniform';
+	mesh.z.matchFixed = true;
+	mesh.z.periodic = true;
+	mesh.z.fixPeriodicDomainSize = true;
+	mesh.z.extraRefinement = 0;
 
-%% Time control
-% If time.control = dt, qtimes and tmax are in number of iterations and the step size is fixed to dt
-% If time.control = cfl, qtimes and tmax are in non-dimensional time and dt defines the maximum step size
-time.control = 'dt';
+	mesh.x.buffer.i.n = 20;
+	mesh.x.buffer.i.type = 'sigmoid'; % Sigmoid or exponential
+	mesh.x.buffer.i.stretching = 20;
 
-time.dt = 1.5e-3;
-time.maxCFL = 1;
+	mesh.x.buffer.f.n = 20;
+	%mesh.x.buffer.f.l = 300; % Buffer zone length can be specifiend instead of number of nodes
+	mesh.x.buffer.f.type = 'sigmoid';
+	mesh.x.buffer.f.stretching = 20;
+	mesh.x.buffer.f.transition = 0.2;
 
-time.qtimes = 100;
-time.tmax = 1000;
+	mesh.y.buffer.i.n = 0;
 
-%time.CFLignoreZ = true % Ignores the Z direction for CFL (optional, default = false)
+	mesh.y.buffer.f.n = 20;
+	mesh.y.buffer.f.type = 'exponential';
+	mesh.y.buffer.f.stretching = 0.1;
+	mesh.y.buffer.f.ramp = 20; % Defines number of nodes used to ramp up the spacing change in an exponential buffer zone (optional)
 
-%% Numerical methods
-numMethods.spatialDerivs = 'SL4'; % SL4, EX2, EX4 or EXn (with n = order)
-numMethods.spatialDerivsBuffer = 'EX2';
-numMethods.timeStepping = 'RK4'; % RK4, Euler or SSPRK3
-numMethods.neumannOrder = 4;
-numMethods.neumann2Order = 2;
-numMethods.spatialFilterStrength = 0.49; % -0.5 < alpha < 0.5
-numMethods.spatialFilterTime = 0.01; % Characteristic time of the spatial filter (optional, default = 0)
-numMethods.filterDirections = [1 1 1];
-numMethods.filterBorders = true; ('decentered' (default) or 'reducedOrder' for the strategy near the wall)
-numMethods.filterBordersStartX = false; % Whether or not to use the spatial filter at the start of the X domain (optional, default = false)
-numMethods.filterBordersEndX = false;
-numMethods.filterBordersEndY = false;
+	mesh.z.buffer.i.n = 0;
+	mesh.z.buffer.f.n = 0;
 
-%numMethods.changeOrderZ = false; % Keep the spatial derivative order in the buffer zone for each direction (optional, default = true)
+	%% Tracked points
+	% These are points that will have their variables written to the log file
+	% The mesh will also be fitted to them
+	mesh.trackedPoints = [1 1 0;
+						  2 1.5 0];
+	mesh.fitTrackedPoints = false; % If true, the mesh will be fitted to these points. (optional)
+	mesh.trackedNorm = true; % Normalize the values of probe points in the log file (optional, default = false).
 
-numMethods.SFD.type = 0; % 0 = off, 1 = whole domain, 2 = buffer zone only;
-numMethods.SFD.X = 0.5;
-numMethods.SFD.Delta = 20;
+	logAll = false; % If true, all step will be saved to the log file. (optional)
 
-%numMethods.SFD.applyZ = false; % Turn off SFD in certain buffer zones (optional, default = true);
+	%% Time control
+	% If time.control = dt, qtimes and tmax are in number of iterations and the step size is fixed to dt
+	% If time.control = cfl, qtimes and tmax are in non-dimensional time and dt defines the maximum step size
+	time.control = 'dt';
 
-% This is an optional part that creates an extra region where the SFD will be active. (Only possible if SFD.type = 2)
-%numMethods.SFD.extraRegion{1}.location = [0 0 0];
-%numMethods.SFD.extraRegion{1}.size = [50 1 inf];
-%numMethods.SFD.extraRegion{1}.X = 30;
+	time.dt = 1.5e-3;
+	time.maxCFL = 1;
+
+	time.qtimes = 100;
+	time.tmax = 1000;
+
+	%time.CFLignoreZ = true % Ignores the Z direction for CFL (optional, default = false)
+
+	%% Numerical methods
+	numMethods.spatialDerivs = 'SL4'; % SL4, EX2, EX4 or EXn (with n = order)
+	numMethods.spatialDerivsBuffer = 'EX2';
+	numMethods.timeStepping = 'RK4'; % RK4, Euler or SSPRK3
+	numMethods.neumannOrder = 4;
+	numMethods.neumann2Order = 2;
+	numMethods.spatialFilterStrength = 0.49; % -0.5 < alpha < 0.5
+	numMethods.spatialFilterTime = 0.01; % Characteristic time of the spatial filter (optional, default = 0)
+	numMethods.filterDirections = [1 1 1];
+	numMethods.filterBorders = true; ('decentered' (default) or 'reducedOrder' for the strategy near the wall)
+	numMethods.filterBordersStartX = false; % Whether or not to use the spatial filter at the start of the X domain (optional, default = false)
+	numMethods.filterBordersEndX = false;
+	numMethods.filterBordersEndY = false;
+
+	%numMethods.changeOrderZ = false; % Keep the spatial derivative order in the buffer zone for each direction (optional, default = true)
+
+	numMethods.SFD.type = 0; % 0 = off, 1 = whole domain, 2 = buffer zone only;
+	numMethods.SFD.X = 0.5;
+	numMethods.SFD.Delta = 20;
+
+	%numMethods.SFD.applyZ = false; % Turn off SFD in certain buffer zones (optional, default = true);
+
+	% This is an optional part that creates an extra region where the SFD will be active. (Only possible if SFD.type = 2)
+	%numMethods.SFD.extraRegion{1}.location = [0 0 0];
+	%numMethods.SFD.extraRegion{1}.size = [50 1 inf];
+	%numMethods.SFD.extraRegion{1}.X = 30;
 
 ## Other Matlab files:
 
