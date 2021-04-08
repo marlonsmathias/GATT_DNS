@@ -5,9 +5,9 @@
 
 Matlab (tested on 2018a)
 
-gfortran (tested on 7.4.0)
+gfortran (tested on 9.3.0)
 
-openmpi (tested on 2.1.1, libopenmpi-dev package)
+openmpi (tested on 4.0.3, libopenmpi-dev package)
 
 2decomp (tested on 1.5, compiled with the same compiler as the code, http://www.2decomp.org/)
 
