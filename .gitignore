@@ -1,0 +1,11 @@
+    /*
+	/*/
+	!/.gitignore
+	!/README.md
+	!/runDNS.m
+	!/parameters.m
+    !/calcInstability.m
+	!/meanflow.m
+	!/runBatch.m
+	!/runDNSautomean.m
+    !/source/
