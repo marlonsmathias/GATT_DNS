@@ -13,7 +13,7 @@ The main features are listed below:
 * Buffer-zones at the open boundaries
 * Domain decomposition for parallel execution
 
-The code was developed by the Group of Aeroacoustics, Transition and Turbulence of the University of São Paulo (EESC-USP)
+The code was developed by the Group of Aeroacoustics, Transition and Turbulence of the São Carlos School of Engineering - University of São Paulo (EESC-USP)
 
 To cite this work, please use the following paper, which brings more details on the implementation and some results obtained by the code:  
 Mathias MS, Medeiros M. Direct Numerical Simulation of a Compressible Flow and Matrix-Free Analysis of its Instabilities over an Open Cavity. J Aerosp Technol Manag [Internet]. 2018 Jul 20;10:1–13. Available from: http://www.jatm.com.br/ojs/index.php/jatm/article/view/949
