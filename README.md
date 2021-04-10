@@ -1,5 +1,20 @@
 # GATT_DNS
 
+This is a Direct Numerical Simulation code for the compressible Navier-Stokes equations. The linear stability analysis (LST) is done by a Jacobian-free time-stepping algorithm.
+
+The main features are listed below:
+
+* Structured mesh (2D or 3D)
+* Mesh stretching to concentrate nodes in the regions of interest
+* 4th order Runge-Kutta for the time-stepping
+* 4th order spectral-like spatial differentiation
+* 10th order spatial anti-aliasing filter
+* Temporal low-pass filter (SFD) to allow reaching a base-flow even ate unstable conditions
+* Buffer-zones at the open boundaries
+* Domain decomposition for parallel execution
+
+Mathias MS, Medeiros M. Direct Numerical Simulation of a Compressible Flow and Matrix-Free Analysis of its Instabilities over an Open Cavity. J Aerosp Technol Manag [Internet]. 2018 Jul 20;10:1–13. Available from: http://www.jatm.com.br/ojs/index.php/jatm/article/view/949
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # System requirements:
@@ -10,7 +25,7 @@ gfortran (tested on 9.3.0)
 
 openmpi (tested on 4.0.3, libopenmpi-dev package)
 
-2decomp (tested on 1.5, compiled with the same compiler as the code, http://www.2decomp.org/)
+2decomp&fft (tested on 1.5, compiled with the same compiler as the code, http://www.2decomp.org/)
 
 
 # Main files:
