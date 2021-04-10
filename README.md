@@ -330,3 +330,8 @@ Must be placed in the source/disturbances folder and be named as disturbanceName
     end subroutine
 
 Multiple variables can be given as inputs. Inputs par1, par2 and etc are optional.
+
+
+# Acknowledgements
+
+The authors would like to thank the São Paulo Research Foundation (FAPESP/Brazil), for grants 2018/04584-0 and 2017/23622-8; and the National Council for Scientific and Technological Development (CNPq/Brazil) for grants 134722/2016-7 and 307956/2019-9.
