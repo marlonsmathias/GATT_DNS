@@ -110,7 +110,7 @@ A copy of this file is made at caseName/Fortran at runtime.
 	%flowType.initial.addNoise = 1e-5; % Adds noise of this magnitude to the initial flow (optional)
 	%flowType.initial.noiseType = 'rand'; % Noise type, either 'rand' or 'uniform' (optional, default = 'rand')
 	%flowType.initial.noiseCenter = [10 0 0]; % Center point of noise gaussian (optional)
-	%flowType.initial.noiseSigma = [1 1 0]; % Size of gaussian for noise (optional)
+	%flowType.initial.noiseSigma = [1 1 inf]; % Size of gaussian for noise (optional)
 	%flowType.initial.changeMach = true; % Changes the Mach number in the initial flow file if it does not match the current Mach number (optional)
 
 
