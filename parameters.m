@@ -34,6 +34,10 @@ flowType.initial.type = 'blasius'; % uniform, blasius or file
 %flowType.initial.blasiusFit = 0.2;
 %flowType.initial.flowFile = 'ReD3000-Ddelta5-Ma03-LD3-large/';
 %flowType.initial.meshFile = 'ReD3000-Ddelta5-Ma03-LD3/';
+flowType.initial.addNoise = 1e-3; % Adds noise of this magnitude to the initial flow (optional)
+flowType.initial.noiseType = 'rand'; % Noise type, either 'rand' or 'uniform' (optional, default = 'rand')
+flowType.initial.noiseCenter = [200 0 0]; % Center point of noise gaussian (optional)
+flowType.initial.noiseSigma = [10 5 0]; % Size of gaussian for noise (optional)
 
 flowType.cav{1}.x = 5*[40.573788325646099 43.573788325646099];
 flowType.cav{1}.y = 5*[-1 0];

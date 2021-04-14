@@ -184,13 +184,46 @@ switch initialFlow.type
 end
 
 if isfield(initialFlow,'addNoise')
-	U = U + initialFlow.addNoise*randn([nx ny nz]);
-	V = V + initialFlow.addNoise*randn([nx ny nz]);
-	if nz > 1
-		W = W + initialFlow.addNoise*randn([nx ny nz]);
+
+	if ~isfield(initialFlow,'noiseType') || strcmp(initialFlow.noiseType,'rand')
+		noiseU = initialFlow.addNoise*randn([nx ny nz]);
+		noiseV = initialFlow.addNoise*randn([nx ny nz]);
+		noiseW = initialFlow.addNoise*randn([nx ny nz]);
+		noiseR = initialFlow.addNoise*randn([nx ny nz]);
+		noiseE = initialFlow.addNoise*randn([nx ny nz]);
+	elseif strcmp(initialFlow.noiseType,'uniform')
+		noiseU = initialFlow.addNoise*ones([nx ny nz]);
+		noiseV = initialFlow.addNoise*ones([nx ny nz]);
+		noiseW = initialFlow.addNoise*ones([nx ny nz]);
+		noiseR = initialFlow.addNoise*ones([nx ny nz]);
+		noiseE = initialFlow.addNoise*ones([nx ny nz]);
 	end
-	R = R + initialFlow.addNoise*randn([nx ny nz]);
-	E = E + initialFlow.addNoise*randn([nx ny nz]);
+	
+	if isfield(initialFlow,'noiseCenter')
+		if ~isfield(initialFlow,'noiseSigma')
+			initialFlow.noiseSigma = [(X(end)-X(1)).^2/10 (Y(end)-Y(1)).^2/10 (Z(end)-Z(1)).^2/10];
+		end
+		x0 = initialFlow.noiseCenter(1);
+		y0 = initialFlow.noiseCenter(2);
+		z0 = initialFlow.noiseCenter(3);
+		
+		sigmaX = initialFlow.noiseSigma(1);
+		sigmaY = initialFlow.noiseSigma(2);
+		sigmaZ = initialFlow.noiseSigma(3);
+    end
+    
+    if nz == 1
+        sigmaZ = inf;
+    end
+	noiseGaussian = exp(-((X'-x0).^2/sigmaX+(Y-y0).^2/sigmaY+(permute(Z,[1 3 2])-z0).^2/sigmaZ));
+	
+	U = U + noiseU.*noiseGaussian;
+	V = V + noiseV.*noiseGaussian;
+	if nz > 1
+		W = W + noiseW.*noiseGaussian;
+	end
+	R = R + noiseR.*noiseGaussian;
+	E = E + noiseE.*noiseGaussian;
 end
 
 flow.U = U;

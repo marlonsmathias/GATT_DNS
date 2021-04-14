@@ -107,7 +107,10 @@ A copy of this file is made at caseName/Fortran at runtime.
 
 	%flowType.initial.flowFile = 'baseflows/TSWaves/flow.mat';
 	%flowType.initial.meshFile = 'baseflows/TSWaves/mesh.mat'; % Providing a mesh is optional. If no mesh is given the code assumes it is the same as the current mesh. If the given mesh is different, the flow will be interpolated to the new mesh.
-	%flowType.initial.addNoise = 1e-5; % Adds white noise of this magnitude to the initial flow (optional)
+	%flowType.initial.addNoise = 1e-5; % Adds noise of this magnitude to the initial flow (optional)
+	%flowType.initial.noiseType = 'rand'; % Noise type, either 'rand' or 'uniform' (optional, default = 'rand')
+	%flowType.initial.noiseCenter = [10 0 0]; % Center point of noise gaussian (optional)
+	%flowType.initial.noiseSigma = [1 1 0]; % Size of gaussian for noise (optional)
 	%flowType.initial.changeMach = true; % Changes the Mach number in the initial flow file if it does not match the current Mach number (optional)
 
 
