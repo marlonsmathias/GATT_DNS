@@ -210,6 +210,10 @@ if isfield(initialFlow,'addNoise')
 		sigmaX = initialFlow.noiseSigma(1);
 		sigmaY = initialFlow.noiseSigma(2);
 		sigmaZ = initialFlow.noiseSigma(3);
+    else
+        sigmaX = inf;
+        sigmaY = inf;
+        sigmaZ = inf;
     end
     
     if nz == 1
