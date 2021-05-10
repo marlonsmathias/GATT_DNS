@@ -185,6 +185,9 @@ fprintf('Running preprocessor\n')
 addpath source
 addpath source/boundaries
 
+% Set maximum number of threads for Matlab processes
+maxNumCompThreads(p_row*p_col);
+
 % Clear previous system calls cache
 [~,~] = system('');
 

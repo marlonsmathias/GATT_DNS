@@ -40,7 +40,7 @@ while true
 		break
 	end
 	
-	fprintf('Computing means loop: %d\n Current change: %f\n', nMean, change)
+	fprintf('Computing means loop: %d\n Current change: %g\n', nMean, change)
 	nMean = nMean + 1;
     
     caseFiles = {};

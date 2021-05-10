@@ -247,6 +247,9 @@ system(['cp ' caseFolder '/mesh.mat ' caseFolder '/mesh.mat.backup >/dev/null 2>
     
 preprocessing
 
+% Set maximum number of threads for Matlab processes
+maxNumCompThreads(p_row*p_col);
+
 % Fix nSave in parameters.F90 and set to 0
 system(['sed -i ''s/    integer :: nSave = .*/    integer :: nSave = 0/'' ' caseFolder '/bin/parameters.F90']);
 
@@ -849,7 +852,7 @@ while true
 		break
 	end
 	
-	fprintf('Computing means loop: %d\n Current change: %f\n', nMean, change)
+	fprintf('Computing means loop: %d\n Current change: %g\n', nMean, change)
 	nMean = nMean + 1;
 
     caseFiles = {};
