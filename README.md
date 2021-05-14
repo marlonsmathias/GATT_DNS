@@ -22,7 +22,7 @@ Mathias MS, Medeiros M. Direct Numerical Simulation of a Compressible Flow and M
 
 # System requirements:
 
-Matlab (tested on 2018a)
+Matlab (or Octave, with provided overloaded functions)
 
 gfortran (tested on 9.3.0)
 
