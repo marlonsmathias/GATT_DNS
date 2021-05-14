@@ -24,14 +24,27 @@ else
 	filterDecenteredStencilRHSz = filterDecenteredStencilRHS;
 end
 
+%% If the mesh in Z has exactly 4 nodes and has no boundaries, switch it to spectral mode
+if mesh.nz == 4 && length(derivStartsZ) == 1 && isempty(derivStartsZ{1}) && isempty(derivEndsZ{1})
+    centeredStencilLHSz = 1;
+    centeredStencilRHSz = [0 pi/4];
+    centeredStencilLHSbz = centeredStencilLHSz;
+	centeredStencilRHSbz = centeredStencilRHSz;
+else
+	centeredStencilLHSz = centeredStencilLHS;
+	centeredStencilRHSz = centeredStencilRHS;
+    centeredStencilLHSbz = centeredStencilLHSb;
+	centeredStencilRHSbz = centeredStencilRHSb;
+end
+
 %% Make matrices
 [LHSx, RHSx] = makeMatricesEachDirection(centeredStencilLHS, centeredStencilRHS, decenteredStencilLHS, decenteredStencilRHS, derivStartsX, derivEndsX, mesh.nx, []);
 [LHSy, RHSy] = makeMatricesEachDirection(centeredStencilLHS, centeredStencilRHS, decenteredStencilLHS, decenteredStencilRHS, derivStartsY, derivEndsY, mesh.ny, []);
-[LHSz, RHSz] = makeMatricesEachDirection(centeredStencilLHS, centeredStencilRHS, decenteredStencilLHS, decenteredStencilRHS, derivStartsZ, derivEndsZ, mesh.nz, []);
+[LHSz, RHSz] = makeMatricesEachDirection(centeredStencilLHSz, centeredStencilRHSz, decenteredStencilLHS, decenteredStencilRHS, derivStartsZ, derivEndsZ, mesh.nz, []);
 
 [LHSxb, RHSxb] = makeMatricesEachDirection(centeredStencilLHSb, centeredStencilRHSb, decenteredStencilLHSb, decenteredStencilRHSb, derivStartsX, derivEndsX, mesh.nx, mesh.x.buffer);
 [LHSyb, RHSyb] = makeMatricesEachDirection(centeredStencilLHSb, centeredStencilRHSb, decenteredStencilLHSb, decenteredStencilRHSb, derivStartsY, derivEndsY, mesh.ny, mesh.y.buffer);
-[LHSzb, RHSzb] = makeMatricesEachDirection(centeredStencilLHSb, centeredStencilRHSb, decenteredStencilLHSb, decenteredStencilRHSb, derivStartsZ, derivEndsZ, mesh.nz, mesh.z.buffer);
+[LHSzb, RHSzb] = makeMatricesEachDirection(centeredStencilLHSbz, centeredStencilRHSbz, decenteredStencilLHSb, decenteredStencilRHSb, derivStartsZ, derivEndsZ, mesh.nz, mesh.z.buffer);
 
 [fLHSx, fRHSx] = makeMatricesEachDirection(filterStencilLHS, filterStencilRHS, filterDecenteredStencilLHS, filterDecenteredStencilRHS, derivStartsX, derivEndsX, mesh.nx, []);
 [fLHSy, fRHSy] = makeMatricesEachDirection(filterStencilLHS, filterStencilRHS, filterDecenteredStencilLHS, filterDecenteredStencilRHS, derivStartsY, derivEndsY, mesh.ny, []);

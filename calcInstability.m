@@ -129,13 +129,17 @@ end
 caseName = caseFolder;
 logAll = false;
 
-if exist('nz','var')
-    mesh.z.n = nz;
-end
 if exist('beta','var') && beta > 0
     domain.zi = 0;
     domain.zf = 2*pi/beta;
     mesh.z.fixPeriodicDomainSize = true;
+	if singleBeta
+		mesh.z.n = 4;
+	end
+end
+
+if exist('nz','var')
+    mesh.z.n = nz;
 end
 
 if exist('SFD','var')
