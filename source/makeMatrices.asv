@@ -63,17 +63,16 @@ end
 
 %% Transform due to mesh stretching
 
-% Chose the spatial derivative method for the metric
-if ~isfield(numMethods,'metricMethod') % If unspecified, use SL4
+if ~isfield(numMethods,'metricMethod')
 	numMethods.metricMethod = 'SL4';
-elseif isempty(numMethods.metricMethod) % If left blank, use same as spatial derivatives
+elseif isempty(numMethods.metricMethod)
 	numMethods.metricMethod = numMethods.spatialDerivs;
 end
 
-if mesh.nz == 4 % Use SL4 for z if only 4 nodes are being used, due to its smaller stencil
+if mesh.nz == 4
     numMethods.metricMethodZ = 'SL4';
 else
-    numMethods.metricMethodZ = numMethods.metricMethod;
+    numMethods.metricMethodZ = 'SL4';
 end
 
 LHSx = applyMetric(LHSx,mesh.X,mesh.x,domain.xf,numMethods.metricMethod);

@@ -243,8 +243,9 @@ A copy of this file is made at caseName/Fortran at runtime.
 	%time.CFLignoreZ = true % Ignores the Z direction for CFL (optional, default = false)
 
 	%% Numerical methods
-	numMethods.spatialDerivs = 'SL4'; % SL4, EX2, EX4 or EXn (with n = order)
+	numMethods.spatialDerivs = 'SL4'; % SL6, SL6O3, SL4, EX4 or EX2
 	numMethods.spatialDerivsBuffer = 'EX2';
+    %numMethods.metricMethod = ''; % Set the method for cimputing the metrics (optional, default = 'SL4', leave blank for same as spatialDerivs)
 	numMethods.timeStepping = 'RK4'; % RK4, Euler or SSPRK3
 	numMethods.neumannOrder = 4;
 	numMethods.neumann2Order = 2;

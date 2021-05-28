@@ -173,6 +173,7 @@ mesh.trackedNorm = true;
 %% Numerical methods
 numMethods.spatialDerivs = 'SL6'; % SL4 or EX2
 numMethods.spatialDerivsBuffer = 'EX4';
+%numMethods.metricMethod = ''; % Set the method for cimputing the metrics (optional, default = 'SL4', leave blank for same as spatialDerivs)
 numMethods.timeStepping = 'RK4'; % RK4 or Euler
 numMethods.neumannOrder = 6;
 numMethods.neumann2Order = 2;
