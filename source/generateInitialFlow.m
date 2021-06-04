@@ -89,7 +89,7 @@ switch initialFlow.type
     case 'file'
 		
 		% If a folder is given, find the last flow file inside it
-		if endsWith(initialFlow.flowFile,'/')
+		if strcmp(initialFlow.flowFile(end),'/')
 			nStep = checkPreviousRun(initialFlow.flowFile(1:end-1));
             if ~isempty(nStep)
                 initialFlow.flowFile = sprintf('%sflow_%.10d.mat',initialFlow.flowFile,nStep);
@@ -105,7 +105,7 @@ switch initialFlow.type
         if isfield(initialFlow,'meshFile')
 
 			% If a folder is given, use the mesh file inside it
-			if endsWith(initialFlow.meshFile,'/')
+			if strcmp(initialFlow.meshFile(end),'/')
 				initialFlow.meshFile = [initialFlow.meshFile 'mesh.mat'];
 			end
 
@@ -211,6 +211,9 @@ if isfield(initialFlow,'addNoise')
 		sigmaY = initialFlow.noiseSigma(2);
 		sigmaZ = initialFlow.noiseSigma(3);
     else
+        x0 = 0;
+        y0 = 0;
+        z0 = 0;
         sigmaX = inf;
         sigmaY = inf;
         sigmaZ = inf;
@@ -219,8 +222,10 @@ if isfield(initialFlow,'addNoise')
     if nz == 1
         sigmaZ = inf;
     end
-	noiseGaussian = exp(-((X'-x0).^2/sigmaX+(Y-y0).^2/sigmaY+(permute(Z,[1 3 2])-z0).^2/sigmaZ));
-	
+    radius = bsxfun(@plus,(X'-x0).^2/sigmaX,(Y-y0).^2/sigmaY);
+    radius = bsxfun(@plus,radius,(permute(Z,[1 3 2])-z0).^2/sigmaZ);
+    noiseGaussian = exp(-radius);
+    
 	U = U + noiseU.*noiseGaussian;
 	V = V + noiseV.*noiseGaussian;
 	if nz > 1
