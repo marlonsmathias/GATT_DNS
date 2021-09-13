@@ -12,7 +12,7 @@ fprintf(outFile,'MATROOT = %s\n',matlabDir);
 fprintf(outFile,'DECOMPDIR = %s\n',decompDir);
 
 if optimizeCode && ~debugger % Optimization options
-    fprintf(outFile,'ARGS += -Ofast -fno-finite-math-only -march=native\n');
+    fprintf(outFile,'ARGS += -O3 -fno-finite-math-only -march=native\n');
 end
 
 if debugger % Debugging options
