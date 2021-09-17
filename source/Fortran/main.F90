@@ -366,10 +366,12 @@
 		
         ! Apply SFD
         if(SFD.gt.0) then
-			Umean = Umean + dt/SFD_Delta*(Unew-Umean)
-            Vmean = Vmean + dt/SFD_Delta*(Vnew-Vmean)
-            Rmean = Rmean + dt/SFD_Delta*(Rnew-Rmean)
-            Emean = Emean + dt/SFD_Delta*(Enew-Emean)
+			if(SFD_Delta.gt.0) then
+				Umean = Umean + dt/SFD_Delta*(Unew-Umean)
+				Vmean = Vmean + dt/SFD_Delta*(Vnew-Vmean)
+				Rmean = Rmean + dt/SFD_Delta*(Rnew-Rmean)
+				Emean = Emean + dt/SFD_Delta*(Enew-Emean)
+			endif
 		
             Unew = Unew - dt*SFD_X*(Unew-Umean)
             Vnew = Vnew - dt*SFD_X*(Vnew-Vmean)
@@ -377,7 +379,9 @@
             Enew = Enew - dt*SFD_X*(Enew-Emean)
 
             if(nz.gt.1) then
-                Wmean = Wmean + dt/SFD_Delta*(Wnew-Wmean)
+				if(SFD_Delta.gt.0) then
+					Wmean = Wmean + dt/SFD_Delta*(Wnew-Wmean)
+				endif
 				Wnew = Wnew - dt*SFD_X*(Wnew-Wmean)
             endif
         
@@ -497,7 +501,9 @@
             include 'exportFlow.F90'
 			
 			if(SFD.gt.0) then
-				include 'exportMeanFlow.F90'
+				if(SFD_Delta.gt.0) then
+					include 'exportMeanFlow.F90'
+				endif
 			endif
 			
         endif

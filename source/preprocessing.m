@@ -47,7 +47,7 @@ if isfield(numMethods,'SFD')
 		calcSFDregion
 	end
 	if isinf(numMethods.SFD.Delta)
-		numMethods.SFD.Delta = 1e100;
+		numMethods.SFD.Delta = -1;
 	end
 	if numMethods.SFD.type > 0 && exist([caseName '/meanflowSFD.mat'],'file')
 		if ~isfield(numMethods.SFD,'resume')
