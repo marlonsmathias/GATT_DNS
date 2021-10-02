@@ -185,18 +185,24 @@ end
 
 if isfield(initialFlow,'addNoise')
 
+	if ~isfield(initialFlow,'noiseVars')
+		if nz == 1
+			noiseVars = 'UVRE';
+		else
+			noiseVars = 'UVWRE';
+        end
+    else
+        noiseVars = initialFlow.noiseVars;
+	end
+	
 	if ~isfield(initialFlow,'noiseType') || strcmp(initialFlow.noiseType,'rand')
-		noiseU = initialFlow.addNoise*randn([nx ny nz]);
-		noiseV = initialFlow.addNoise*randn([nx ny nz]);
-		noiseW = initialFlow.addNoise*randn([nx ny nz]);
-		noiseR = initialFlow.addNoise*randn([nx ny nz]);
-		noiseE = initialFlow.addNoise*randn([nx ny nz]);
+		for var = noiseVars
+			noise.(var) = initialFlow.addNoise*randn([nx ny nz]);
+		end
 	elseif strcmp(initialFlow.noiseType,'uniform')
-		noiseU = initialFlow.addNoise*ones([nx ny nz]);
-		noiseV = initialFlow.addNoise*ones([nx ny nz]);
-		noiseW = initialFlow.addNoise*ones([nx ny nz]);
-		noiseR = initialFlow.addNoise*ones([nx ny nz]);
-		noiseE = initialFlow.addNoise*ones([nx ny nz]);
+		for var = noiseVars
+			noise.(var) = initialFlow.addNoise*ones([nx ny nz]);
+		end
 	end
 	
 	if isfield(initialFlow,'noiseCenter')
@@ -225,14 +231,10 @@ if isfield(initialFlow,'addNoise')
     radius = bsxfun(@plus,(X'-x0).^2/sigmaX,(Y-y0).^2/sigmaY);
     radius = bsxfun(@plus,radius,(permute(Z,[1 3 2])-z0).^2/sigmaZ);
     noiseGaussian = exp(-radius);
-    
-	U = U + noiseU.*noiseGaussian;
-	V = V + noiseV.*noiseGaussian;
-	if nz > 1
-		W = W + noiseW.*noiseGaussian;
+	
+	for var = noiseVars
+		eval([var ' = ' var ' + noise.' var '.*noiseGaussian;']);
 	end
-	R = R + noiseR.*noiseGaussian;
-	E = E + noiseE.*noiseGaussian;
 end
 
 flow.U = U;

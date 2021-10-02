@@ -92,12 +92,29 @@ if genInitialFlow % If there is no previous run, generate new initial flow
     % Save initial flow to file
     flowToSave = flow;
     flowToSave.t = 0;
-    flowToSave.U(boundary.insideWall) = nan;
-    flowToSave.V(boundary.insideWall) = nan;
-    flowToSave.W(boundary.insideWall) = nan;
-    flowToSave.R(boundary.insideWall) = nan;
-    flowToSave.E(boundary.insideWall) = nan;
+	for var = 'UVWRE'
+		flowToSave.(var)(boundary.insideWall) = nan;
+	end
     save([caseName '/flow_0000000000.mat'],'-struct','flowToSave','-v7.3');
+	
+	if isfield(flowType.initial,'meanFile')
+		flowTypeTemp.initial.type = 'file';
+		flowTypeTemp.initial.flowFile = flowType.initial.meanFile;
+		if isfield(flowType.initial,'meshFile')
+			flowTypeTemp.initial.meshFile = flowType.initial.meshFile;
+        end
+		
+		meanFlow = generateInitialFlow(mesh,flowParameters,flowTypeTemp.initial,boundary.insideWall);
+
+		% Save initial flow to file
+		flowToSave = meanFlow;
+		flowToSave.t = 0;
+		for var = 'UVWRE'
+			flowToSave.(var)(boundary.insideWall) = nan;
+		end
+		save([caseName '/meanflowSFD.mat'],'-struct','flowToSave','-v7.3');
+	end
+	
 
 else
     fprintf('Resuming from file number %d\n',time.nStep)

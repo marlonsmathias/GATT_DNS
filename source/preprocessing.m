@@ -49,7 +49,7 @@ if isfield(numMethods,'SFD')
 	if isinf(numMethods.SFD.Delta)
 		numMethods.SFD.Delta = -1;
 	end
-	if numMethods.SFD.type > 0 && exist([caseName '/meanflowSFD.mat'],'file')
+	if numMethods.SFD.type > 0 && (exist([caseName '/meanflowSFD.mat'],'file') || isfield(flowType.initial,'meanFile'))
 		if ~isfield(numMethods.SFD,'resume')
 			numMethods.SFD.resume = 1;
 		end
