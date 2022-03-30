@@ -15,8 +15,8 @@ The main features are listed below:
 
 The code was developed by the Group of Aeroacoustics, Transition and Turbulence of the São Carlos School of Engineering - University of São Paulo (EESC-USP)
 
-To cite this work, please use the following paper, which brings more details on the implementation and some results obtained by the code:  
-Mathias MS, Medeiros M. Direct Numerical Simulation of a Compressible Flow and Matrix-Free Analysis of its Instabilities over an Open Cavity. J Aerosp Technol Manag [Internet]. 2018 Jul 20;10:1–13. Available from: http://www.jatm.com.br/ojs/index.php/jatm/article/view/949
+To cite this work, please use the following thesis, which brings more details on the implementation and some results obtained by the code:
+Mathias, Marlon Sproesser. Computational study of the hydrodynamic stability of gaps and cavities in a subsonic compressible boundary layer. São Carlos School of Engineering - University of São Paulo; 2021. doi:10.11606/T.18.2021.tde-29032022-085318. Available from: https://www.teses.usp.br/teses/disponiveis/18/18161/tde-29032022-085318/en.php
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
