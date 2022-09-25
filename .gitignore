@@ -10,4 +10,5 @@
 !/runBatch.m
 !/runDNSautomean.m
 !/source/
+!/etc/
 *.asv
