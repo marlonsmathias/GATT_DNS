@@ -28,7 +28,8 @@ gfortran (tested on 9.3.0)
 
 openmpi (tested on 4.0.3, libopenmpi-dev package)
 
-2decomp&fft (tested on 1.5, compiled with the same compiler as the code, http://www.2decomp.org/)
+2decomp&fft (N. Li and S. Laizet, “2DECOMP and FFT-A Highly Scalable 2D Decomposition Library and FFT Interface,” Cray User Group 2010 conference, pp. 1–13, 2010.
+Originally available from http://www.2decomp.org/ , unfortunatelly this web site seems to have been taken down, so I have included the source code in etc/2decomp_fft)
 
 
 # Main files:
