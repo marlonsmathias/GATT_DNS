@@ -1,6 +1,8 @@
 # Get base image
 FROM mathworks/matlab:r2022b
 
+RUN ulimit -c unlimited
+
 # Copy 2decomp files
 COPY etc/2decomp_fft /usr/local/2decomp_fft
 
