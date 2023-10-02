@@ -16,3 +16,4 @@ RUN sudo make all
 
 # Go back to the main directory
 WORKDIR /home/dns
+ENTRYPOINT ["matlab"]
