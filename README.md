@@ -22,15 +22,33 @@ Mathias, Marlon Sproesser. Computational study of the hydrodynamic stability of 
 
 # System requirements:
 
-Matlab (or Octave, with provided overloaded functions)
+- Matlab (or Octave, with provided overloaded functions)
+- make
+- gfortran (tested on 9.3.0)
+- openmpi (tested on 4.0.3, libopenmpi-dev package)
+- 2decomp&fft (N. Li and S. Laizet, “2DECOMP and FFT-A Highly Scalable 2D Decomposition Library and FFT Interface,” Cray User Group 2010 conference, pp. 1–13, 2010. Originally available from http://www.2decomp.org/ , unfortunatelly this web site seems to have been taken down, so we have included the source code in etc/2decomp_fft)
 
-gfortran (tested on 9.3.0)
+Or Docker
 
-openmpi (tested on 4.0.3, libopenmpi-dev package)
+# Running the code using Docker
 
-2decomp&fft (N. Li and S. Laizet, “2DECOMP and FFT-A Highly Scalable 2D Decomposition Library and FFT Interface,” Cray User Group 2010 conference, pp. 1–13, 2010.
-Originally available from http://www.2decomp.org/ , unfortunatelly this web site seems to have been taken down, so I have included the source code in etc/2decomp_fft)
+- Download the code with git clone and enter the folder.
 
+```git clone https://github.com/marlonsmathias/GATT_DNS .```
+
+```cd GATT_DNS```
+
+- Build the Docker image
+
+```docker build . -t gatt_dns```
+
+- Run the Docker image
+
+```docker run -it --rm --user "$(id -u):$(id -g)" -v $(pwd):/home/dns -w /home/dns gatt_dns -batch 'runDNS <parameters file>'```
+
+If your Matlab license is of the concurrent type, add the following argument
+
+```-e MLM_LICENSE_FILE=<port>@<licensing server>```
 
 # Main files:
 
