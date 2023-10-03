@@ -50,6 +50,7 @@ displayAllOutputs = false;
 % Set folders for libraries
 matlabDir = ''; % Leave empty for automatic directory
 decompDir = '/usr/local/2decomp_fft';
+use_devshm = true; % Create a symlink for the dev/shm folder for temp files
 
 % Parameters required by the DNS
 logAll = false;
@@ -218,9 +219,13 @@ compileFortran
 fprintf('Creating new folders and files\n')
 
 if ~exist([caseFolder '/Instability'],'dir')
-	instFolderName = ['/dev/shm/Instability' num2str(randi(1e8))];
-    mkdir(instFolderName);
-	system(['ln -s ' instFolderName ' ' caseFolder '/Instability']);
+    if use_devshm
+        instFolderName = ['/dev/shm/Instability' num2str(randi(1e8))];
+        mkdir(instFolderName);
+        system(['ln -s ' instFolderName ' ' caseFolder '/Instability']);
+    else
+        mkdir([caseFolder '/Instability'])
+    end
 end
 
 if ~exist([caseFolder '/Instability/' caseNameInstability],'dir')
