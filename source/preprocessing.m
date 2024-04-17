@@ -91,7 +91,7 @@ if ~exist([caseName '/bin'],'dir')
     mkdir([caseName '/bin']);
 end
 
-disturbTypes = writeFortranDisturbances(caseName,boundaryInfo);
+disturbTypes = writeFortranDisturbances(caseName,boundaryInfo,tridimensional);
 
 writeFortranParameters(caseName,mesh,flowParameters,time,numMethods,logAll,p_row,p_col)
 

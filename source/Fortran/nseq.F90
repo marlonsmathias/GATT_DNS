@@ -61,7 +61,7 @@
                         & derivsAY, derivsBY, derivsCY, derivsRY, &
                         & derivsDX, derivsDY, &
                         & periodicX, periodicY)
-    
+     
     call calcDerivsXY(E,DEx,DEy,nDerivBlocksX,nDerivBlocksY,derivBlocksX,derivBlocksY, &
                         & derivnRHSx,derivnRHSy, &
                         & derivsAX, derivsBX, derivsCX, derivsRX, &
@@ -133,6 +133,9 @@
     
     dE = -(DEx*U + DEy*V) + (-P*(DUx+DVy) + tauxx*DUx + tauyy*DVy + tauxy*(DVx+DUy) - htx - hty)/R
     
+    ! CALL FORCINGS
+    include 'runForcings2D.F90'
+
     end subroutine
     
     
@@ -313,6 +316,9 @@
     dW = -(DWx*U + DWy*V + DWz*W) + (vtz - DPz)/R
     
     dE = -(DEx*U + DEy*V + DEz*W) + (-P*(DUx+DVy+DWz) + tauxx*DUx + tauyy*DVy + tauzz*DWz + tauxy*(DVx+DUy) + tauxz*(DWx+DUz) + tauyz*(DWy+DVz) - htx - hty - htz)/R
+
+    ! CALL FORCINGS
+    include 'runForcings3D.F90'
     
     end subroutine
     
