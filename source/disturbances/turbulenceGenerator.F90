@@ -22,10 +22,10 @@
     call MPI_ALLREDUCE(E_local, E, 1, MPI_REAL8, MPI_SUM, MPI_COMM_WORLD, ierror)
     call MPI_ALLREDUCE(N_local, N, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD, ierror)
 
-    E = E/N
+    du = du + 0.25*epsilon*N/E*u
+    dv = dv + 0.25*epsilon*N/E*v
+    dw = dw + 0.25*epsilon*N/E*w
 
-    du = du + 0.5*epsilon/E*u
-    dv = dv + 0.5*epsilon/E*v
-    dw = dw + 0.5*epsilon/E*w
+        write(*,*) E/N
     
     end subroutine
