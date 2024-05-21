@@ -1,15 +1,15 @@
 import os
 import sys
-sys.path.append('/home/felipe/pythonFunc/mainfuncsPy')
 import vtk
 from vtk.numpy_interface import algorithms as algs
 from vtk.numpy_interface import dataset_adapter as dsa
 import numpy as np
 import scipy
 import h5py
-import multiprocessing 
+#import multiprocessing 
 
 
+#input vars
 
 global POSTPROCESS
 
@@ -25,64 +25,32 @@ if POSTPROCESS == 0:
 
 
 
-files_path = '/home/felipe/autolst/m05-FINAL/'    
+files_path = ''    
+output_path = ''
 
-clear = lambda: os.system('clear')  # On Windows System
-clear()
+#clear = lambda: os.system('clear')  # On Windows System
+#clear()
 
    
 
 def vtkconvert(data,mesh,outputfilepath,outputfilepath_postporcessing):
     #` Load mesh data
-    print('load mesh')
+    print('Convert mesh')
     x = np.array(mesh['X'][0],dtype=np.float64)
     y = np.array(mesh['Y'][0],dtype=np.float64)
-    z = np.array(mesh['Z'][0],dtype=np.float64)
-    #x1 = np.abs(mesh['x1'][0])
-    #x2 = np.abs(mesh['x2'][0])
-    #y1 = np.abs(mesh['y1'][0])
-    #y2 = np.abs(mesh['y2'][0])
-    #z1 = np.abs(mesh['z1'][0])
-    #z2 = np.abs(mesh['z2'][0])
-    #L = np.abs(mesh['L'][0])
-    #D = np.abs(mesh['D'][0])
-    x1 = 250
-    x2 = 500
-    y1 = -6
-    y2 = 20
-    z1 = -20
-    z2 = 20
-    L = 12.22
-    D = 6.11
-
-
-    # Set display interval
-    x_start = np.abs(x - (x1-2*L)).argmin()
-    x_end = np.abs(x - (x2)).argmin()
-    y_start = np.abs(y -y1).argmin()
-    y_end = np.abs(y - y2).argmin()
-    z_start = np.abs(z - z1).argmin()
-    z_end = np.abs(z - z2).argmin()
-
-    x_factor = 1
-    y_factor = 1
-    z_factor = 1
-
-    x = x[x_start:x_end][::x_factor]
-    y = y[y_start:y_end][::y_factor]
-    z = z[z_start:z_end][::z_factor]
+    z = np.array(mesh['Z'][0],dtype=np.float64)    
 
     X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
 
-    wall = np.array(mesh['wall'])[x_start:x_end,y_start:y_end,z_start:z_end][::x_factor,::y_factor,::z_factor]
+    wall = np.array(mesh['wall'])
 
-    print('load data')
+    print('Convert data')
 
-    U = np.array(data['U']).transpose((2,1,0))[x_start:x_end,y_start:y_end,z_start:z_end][::x_factor,::y_factor,::z_factor]
-    V = np.array(data['V']).transpose((2,1,0))[x_start:x_end,y_start:y_end,z_start:z_end][::x_factor,::y_factor,::z_factor]
-    W = np.array(data['W']).transpose((2,1,0))[x_start:x_end,y_start:y_end,z_start:z_end][::x_factor,::y_factor,::z_factor]
-    R = np.array(data['E']).transpose((2,1,0))[x_start:x_end,y_start:y_end,z_start:z_end][::x_factor,::y_factor,::z_factor]
-    E = np.array(data['R']).transpose((2,1,0))[x_start:x_end,y_start:y_end,z_start:z_end][::x_factor,::y_factor,::z_factor]    
+    U = np.array(data['U']).transpose((2,1,0))
+    V = np.array(data['V']).transpose((2,1,0))
+    W = np.array(data['W']).transpose((2,1,0))
+    R = np.array(data['E']).transpose((2,1,0))
+    E = np.array(data['R']).transpose((2,1,0)) 
 
     U[np.isnan(U)] = 0
     V[np.isnan(V)] = 0
@@ -90,17 +58,17 @@ def vtkconvert(data,mesh,outputfilepath,outputfilepath_postporcessing):
         
     if POSTPROCESS == True:
 
-        L2 = np.array(data['L2']).transpose((2,1,0))[x_start:x_end,y_start:y_end,z_start:z_end][::x_factor,::y_factor,::z_factor]
-        Q  = np.array(data['Q']).transpose((2,1,0))[x_start:x_end,y_start:y_end,z_start:z_end][::x_factor,::y_factor,::z_factor]
-        #Mach    =      calculate_mach_number(U, E, R)
-        #Vortk   =      calculate_vorticity_z(U, V, dx, dy)
-        #Dilatation = np.array(data['Dilatation']).transpose((2,1,0))[x_start:x_end,y_start:y_end,z_start:z_end][::x_factor,::y_factor,::z_factor]
+        L2 = np.array(data['L2']).transpose((2,1,0))
+        Q  = np.array(data['Q']).transpose((2,1,0))
+        #Mach    =  np.array(data['Ma']).transpose((2,1,0))
+        #Vortk   =  np.array(data['Vortk']).transpose((2,1,0))
+        #Dilatation = np.array(data['Dilatation']).transpose((2,1,0))
 
         Q[np.isnan(Q)] = 0
         L2[np.isnan(L2)] = 0
         #Mach[np.isnan(Mach)] = 0
         #Vortk[np.isnan(Vortk)] = 0
-       # Dilatation[np.isnan(Dilatation)] = 0
+        #Dilatation[np.isnan(Dilatation)] = 0
 
 
     ## PART 1
@@ -137,7 +105,7 @@ def vtkconvert(data,mesh,outputfilepath,outputfilepath_postporcessing):
 
 
     ## CONFIGURE DATA
-    print('configure data')
+    print('Configure data')
     # Create vector matrix on VTK format
     if POSTPROCESS== True:
         
@@ -159,7 +127,7 @@ def vtkconvert(data,mesh,outputfilepath,outputfilepath_postporcessing):
     my_vtk_dataset.GetPointData().AddArray(dsa.numpyTovtkDataArray(V.flatten('F'), "V"))
     my_vtk_dataset.GetPointData().AddArray(dsa.numpyTovtkDataArray(W.flatten('F'), "W"))
 
-    print('write data on vtk')
+    print('Write data on vtk')
     # Create Writer object to save the VTK file
     writer = vtk.vtkRectilinearGridWriter()
     writer.SetFileName(outputfilepath)
@@ -169,7 +137,7 @@ def vtkconvert(data,mesh,outputfilepath,outputfilepath_postporcessing):
     
     if POSTPROCESS == True:
     
-        print('write postprocessing data on vtk')
+        print('Write postprocessing data on vtk')
         writer = vtk.vtkRectilinearGridWriter()
         writer.SetFileName(outputfilepath_postporcessing)
         writer.SetInputData(my_vtk_dataset_postporcessing)
@@ -177,31 +145,31 @@ def vtkconvert(data,mesh,outputfilepath,outputfilepath_postporcessing):
         writer.Write()
 
 
-mesh = scipy.io.loadmat(r"/home/felipe/autolst/m05-FINAL/mesh.mat")
+mesh = scipy.io.loadmat(r,files_path,"mesh.mat")
 
 
-# Nome base dos arquivos
-base_nome_arquivo = "flow_{:010d}.mat"
-base_nome_arquivovtk = "flow_{:010d}.vtk"
-base_nome_arquivovtk_postporcessing= "postprocessing_{:010d}.vtk"
-numeros_arquivos = range(InitialFlow,EndFlow,1)
+# file names
+file_base_name = "flow_{:010d}.mat"
+file_base_name_vtk = "flow_{:010d}.vtk"
+file_base_name_vtk_postporcessing= "postprocessing_{:010d}.vtk"
+files_number = range(InitialFlow,EndFlow,1)
 
-for numero_arquivo in numeros_arquivos:
-    clear()
-    print('flow:'+str(numero_arquivo))
-    nome_arquivo = base_nome_arquivo.format(numero_arquivo)
-    nome_arquivovtk = base_nome_arquivovtk.format(numero_arquivo)
-    nome_arquivovtk_postporcessing = base_nome_arquivovtk_postporcessing.format(numero_arquivo)
-    caminho_arquivo = os.path.join(r"/home/felipe/autolst/m05-FINAL/", nome_arquivo)
-    caminho_arquivovtk = os.path.join(r"/home/felipe/OLIVER-POSTPROCESS/caseD/lambda2/", nome_arquivovtk)
-    caminho_arquivo_postporcessing_vtk = os.path.join(r"/home/felipe/OLIVER-POSTPROCESS/caseD/lambda2/", nome_arquivovtk_postporcessing)
-    if os.path.exists(caminho_arquivo):
-        print(f"O arquivo {nome_arquivo} existe. Carregando e chamando a função convertvtk.")
-        data = h5py.File(caminho_arquivo,'r')
-        vtkconvert(data,mesh,caminho_arquivovtk,caminho_arquivo_postporcessing_vtk)
+for file_number in files_number:
+    #clear()
+    print('flow:'+str(file_number))
+    file_name = file_base_name.format(file_number)
+    file_name_vtk = file_base_name_vtk.format(file_number)
+    file_name_postprocess_vtk = file_base_name_vtk_postporcessing.format(file_number)
+    file_path = os.path.join(files_path, file_name)
+    file_path_vtk = os.path.join(output_path, file_name_vtk)
+    file_path_postporcessing_vtk = os.path.join(output_path, file_name_postprocess_vtk)
+    if os.path.exists(file_path):
+        print(f" File: {file_name}. Loading and converting.")
+        data = h5py.File(file_path,'r')
+        vtkconvert(data,mesh,file_path_vtk,file_path_postporcessing_vtk)
 
        
     else:
-        print(f" Não entrou no looping anterior / Arquivo não encontrado ")
+        print(f" Not found or skipped the looping ")
    
         continue
