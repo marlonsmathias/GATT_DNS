@@ -85,6 +85,12 @@ if isfield(flowType,'disturb')
     for i = 1:length(flowType.disturb)
         if flowType.disturb{i}.active
             boundary.disturb{i}.type = flowType.disturb{i}.type;
+
+            if isfield(flowType.disturb{i},'forcing') && flowType.disturb{i}.forcing
+                boundary.disturb{i}.forcing=true;
+            else
+                boundary.disturb{i}.forcing=false;
+            end
             
             if isfield(flowType.disturb{i},'par')
 				if isnumeric(flowType.disturb{i}.par) % Convert vector to cell, if needed

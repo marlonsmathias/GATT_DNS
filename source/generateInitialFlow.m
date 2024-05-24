@@ -28,6 +28,10 @@ switch initialFlow.type
         [~,y0ind] = min(abs(Y));
         
         U(:,1:y0ind,:) = 0;
+
+        if isfield(initialFlow,'U0')
+            U = initialFlow.U0*U;
+        end
         
     case 'blasius'
 
