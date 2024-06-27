@@ -11,5 +11,6 @@
 !/runDNSautomean.m
 !/source/
 !/etc/
+!/examples/
 !/dockerfile
 *.asv
