@@ -33,6 +33,20 @@ switch initialFlow.type
             U = initialFlow.U0*U;
         end
         
+    case 'poiseulle'
+        
+        U = zeros(nx,ny,nz);
+        V = zeros(nx,ny,nz);
+        W = zeros(nx,ny,nz);
+        R = ones(nx,ny,nz);
+        E = ones(nx,ny,nz) * E0;
+
+        U = U + mesh.Y/(mesh.Y(end) - mesh.Y(1));
+
+        if isfield(initialFlow,'U0')
+            U = initialFlow.U0*U;
+        end
+
     case 'blasius'
 
         ybl = 0:0.0001:10;

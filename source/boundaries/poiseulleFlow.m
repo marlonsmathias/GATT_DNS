@@ -25,7 +25,6 @@ if isfield(flowType,'rug')
 end
 
 % Add outer walls
-flowRegion([1 end],:,:) = false;
 flowRegion(:,[1 end],:) = false;
 
 %% Get walls
@@ -133,3 +132,26 @@ for i = 1:size(insideWalls,1)
     zi(end+1) = insideWalls(i,5);
     zf(end+1) = insideWalls(i,6);
 end
+
+% Add moving walls
+var{end+1} = 'u';
+type{end+1} = 'dir';
+dir{end+1} = 'yi';
+val(end+1) = mesh.Y(1)/(mesh.Y(end)-mesh.Y(1));
+xi(end+1) = 1;
+xf(end+1) = mesh.nx;
+yi(end+1) = 1;
+yf(end+1) = 1;
+zi(end+1) = 1;
+zf(end+1) = mesh.nz;
+
+var{end+1} = 'u';
+type{end+1} = 'dir';
+dir{end+1} = 'yf';
+val(end+1) = mesh.Y(end)/(mesh.Y(end)-mesh.Y(1));
+xi(end+1) = 1;
+xf(end+1) = mesh.nx;
+yi(end+1) = mesh.ny;
+yf(end+1) = mesh.ny;
+zi(end+1) = 1;
+zf(end+1) = mesh.nz;
