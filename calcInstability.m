@@ -1,14 +1,15 @@
 function calcInstability()
-
-%% Define parameters
-
+for beta = [0:0.1:1]*pi
+%%Define parameters
+%for varbeta0 = [1];
 % Case name
-caseFolder = 'Red600-D5-Ma04-LD3-base';
 comment = '';
 
+caseFolder = ['/home/felipe/autolst/teste'];
+   
 % Method parameters
-M = 1000; % Size of Krylov space
-epsilon = 1e-6; % Disturbance magnitude
+M = 8000; % Size of Krylov space
+epsilon = 1e-7; % Disturbance magnitude
 dT = 5;
 singleBeta = true;
 firstOrder = true;
@@ -18,9 +19,9 @@ removeBufferZone = false;
 % SFD parameters (optional)
 resumeSFD = false;
 
-%SFD.type = 0; % 0 = off, 1 = whole domain, 2 = buffer zone only;
-%SFD.Delta = inf;
-%SFD.X = 0.005;
+SFD.type = 2; % 0 = off, 1 = whole domain, 2 = buffer zone only;
+SFD.Delta = inf;
+SFD.X = 0.005;
 
 %SFD.applyY = true;
 
@@ -33,14 +34,21 @@ resumeSFD = false;
 %beta = pi;
 
 % Domain decomposition (optional)
-%global_p_row = 4;
-%global_p_col = 1;
+
+if beta ~= 0 
+
+    global_p_col = 4;
+else
+    global_p_col = 1;
+end
+p_row_max = 64/global_p_col; %Number of cores/threads 
+global_p_row = get_p_row('parametersBaseFlow',p_row_max);
 
 % Output parameters
-nModes = 50; % Number of modes to be saved
+nModes= [40 60 200 400]; % Vector of modes to be saved
 removeCC = true;
-nKrilov = [1000]; % When the results files will be generated
-saveEvery = 100; % When intermediary files will be saved for resuming
+nKrilov = [8000]; %When the results files will be generated
+saveEvery = 500; % When intermediary files will be saved for resuming 
 
 printEigsEvery = 10; % When intermediary eigenvalues will be printed
 printEigsN = 6; % Number of eigenvalues printed
@@ -50,7 +58,6 @@ displayAllOutputs = false;
 % Set folders for libraries
 matlabDir = ''; % Leave empty for automatic directory
 decompDir = '/usr/local/2decomp_fft';
-use_devshm = true; % Create a symlink for the dev/shm folder for temp files
 
 % Parameters required by the DNS
 logAll = false;
@@ -185,6 +192,9 @@ if exist('comment','var') && ~isempty(comment)
 end
 fprintf('Case name: %s\n',caseNameInstability)
 
+
+
+
 %% Run preprocessing
 fprintf('Running preprocessor\n')
 addpath source
@@ -219,13 +229,9 @@ compileFortran
 fprintf('Creating new folders and files\n')
 
 if ~exist([caseFolder '/Instability'],'dir')
-    if use_devshm
-        instFolderName = ['/dev/shm/Instability' num2str(randi(1e8))];
-        mkdir(instFolderName);
-        system(['ln -s ' instFolderName ' ' caseFolder '/Instability']);
-    else
-        mkdir([caseFolder '/Instability'])
-    end
+	instFolderName = ['/dev/shm/Instability' num2str(randi(1e8))];
+    mkdir(instFolderName);
+	system(['ln -s ' instFolderName ' ' caseFolder '/Instability']);
 end
 
 if ~exist([caseFolder '/Instability/' caseNameInstability],'dir')
@@ -432,13 +438,14 @@ for k = M0:M
 
         psiH = psiH(:,index);
 
-        psiA = zeta(:,1:k)*psiH(:,1:min(nModes,k));
+        psiA = zeta(:,1:k)*psiH(:,1:min(length(nModes),k));
         
-        modes = vec2modes(psiA,flowRegion,singleBeta,min(nModes,k),lambdaA,removeCC);
+        modes = vec2modes(psiA,flowRegion,singleBeta,min(length(nModes),k),lambdaA,removeCC);
         modes.lambda = lambdaA;
         modes.X = mesh.X;
         modes.Y = mesh.Y;
         modes.Z = mesh.Z;
+        modes.nModes = nModes;
         
         %% Save modes
         disp(['Saving modes to modes-' caseNameInstability '-M' num2str(k) '.mat'])
@@ -468,7 +475,7 @@ for k = M0:M
     
 end
 end
-
+end
 %% Extra functions
 function vec = flow2vec(flow,flowRegion,singleBeta)
     threeD = size(flowRegion,3) > 1;
@@ -583,25 +590,25 @@ function modes = vec2modes(vec,flowRegion,singleBeta,nModes,lambda,removeCC)
     
     if ~threeD % 2D flow
     
-        modes.U = nan(nx,ny,1,nModes);
-        modes.V = nan(nx,ny,1,nModes);
-        modes.W = nan(nx,ny,1,nModes);
-        modes.R = nan(nx,ny,1,nModes);
-        modes.E = nan(nx,ny,1,nModes);
+        modes.U = nan(nx,ny,1,length(nModes));
+        modes.V = nan(nx,ny,1,length(nModes));
+        modes.W = nan(nx,ny,1,length(nModes));
+        modes.R = nan(nx,ny,1,length(nModes));
+        modes.E = nan(nx,ny,1,length(nModes));
         
         U = nan(nx,ny);
         V = nan(nx,ny);
         R = nan(nx,ny);
         E = nan(nx,ny);
         
-        for i = 1:nModes
+        for i = 1:length(nModes)
 			if imag(lambda(i))>=0
-				vec(:,i) = vec(:,i)/max(abs(vec(:,i)));
+				vec(:,nModes(i)) = vec(:,nModes(i))/max(abs(vec(:,nModes(i))));
 				
-				U(flowRegion) = vec(1:N,i);
-				V(flowRegion) = vec(N+1:2*N,i);
-				R(flowRegion) = vec(2*N+1:3*N,i);
-				E(flowRegion) = vec(3*N+1:4*N,i);
+				U(flowRegion) = vec(1:N,nModes(i));
+				V(flowRegion) = vec(N+1:2*N,nModes(i));
+				R(flowRegion) = vec(2*N+1:3*N,nModes(i));
+				E(flowRegion) = vec(3*N+1:4*N,nModes(i));
 				
 				modes.U(:,:,1,i) = U;
 				modes.V(:,:,1,i) = V;
@@ -612,11 +619,11 @@ function modes = vec2modes(vec,flowRegion,singleBeta,nModes,lambda,removeCC)
         
     elseif ~singleBeta % Fully 3D flow
     
-        modes.U = nan(nx,ny,nz,nModes);
-        modes.V = nan(nx,ny,nz,nModes);
-        modes.W = nan(nx,ny,nz,nModes);
-        modes.R = nan(nx,ny,nz,nModes);
-        modes.E = nan(nx,ny,nz,nModes);
+        modes.U = nan(nx,ny,nz,length(nModes));
+        modes.V = nan(nx,ny,nz,length(nModes));
+        modes.W = nan(nx,ny,nz,length(nModes));
+        modes.R = nan(nx,ny,nz,length(nModes));
+        modes.E = nan(nx,ny,nz,length(nModes));
         
         U = nan(nx,ny,nz);
         V = nan(nx,ny,nz);
@@ -624,15 +631,15 @@ function modes = vec2modes(vec,flowRegion,singleBeta,nModes,lambda,removeCC)
         R = nan(nx,ny,nz);
         E = nan(nx,ny,nz);
         
-        for i = 1:nModes
+        for i = 1:length(nModes)
             if imag(lambda(i))>=0
-				vec(:,i) = vec(:,i)/max(abs(vec(:,i)));
+				vec(:,nModes(i)) = vec(:,nModes(i))/max(abs(vec(:,nModes(i))));
 				
-				U(flowRegion) = vec(1:N,i);
-				V(flowRegion) = vec(N+1:2*N,i);
-				W(flowRegion) = vec(2*N+1:3*N,i);
-				R(flowRegion) = vec(3*N+1:4*N,i);
-				E(flowRegion) = vec(4*N+1:5*N,i);
+				U(flowRegion) = vec(1:N,nModes(i));
+				V(flowRegion) = vec(N+1:2*N,nModes(i));
+				W(flowRegion) = vec(2*N+1:3*N,nModes(i));
+				R(flowRegion) = vec(3*N+1:4*N,nModes(i));
+				E(flowRegion) = vec(4*N+1:5*N,nModes(i));
 				
 				modes.U(:,:,:,i) = U;
 				modes.V(:,:,:,i) = V;
@@ -647,11 +654,11 @@ function modes = vec2modes(vec,flowRegion,singleBeta,nModes,lambda,removeCC)
         N = round(N/nz);
         flowRegion = flowRegion(:,:,1);
         
-        modes.U = nan(nx,ny,1,nModes);
-        modes.V = nan(nx,ny,1,nModes);
-        modes.W = nan(nx,ny,1,nModes);
-        modes.R = nan(nx,ny,1,nModes);
-        modes.E = nan(nx,ny,1,nModes);
+        modes.U = nan(nx,ny,1,length(nModes));
+        modes.V = nan(nx,ny,1,length(nModes));
+        modes.W = nan(nx,ny,1,length(nModes));
+        modes.R = nan(nx,ny,1,length(nModes));
+        modes.E = nan(nx,ny,1,length(nModes));
         
         U = nan(nx,ny);
         V = nan(nx,ny);
@@ -659,15 +666,15 @@ function modes = vec2modes(vec,flowRegion,singleBeta,nModes,lambda,removeCC)
         R = nan(nx,ny);
         E = nan(nx,ny);
         
-        for i = 1:nModes
+        for i = 1:length(nModes)
             if imag(lambda(i))>=0
-				vec(:,i) = vec(:,i)/max(abs(vec(:,i)));
+				vec(:,nModes(i)) = vec(:,nModes(i))/max(abs(vec(:,nModes(i))));
 				
-				U(flowRegion) = vec(1:N,i);
-				V(flowRegion) = vec(N+1:2*N,i);
-				W(flowRegion) = vec(2*N+1:3*N,i);
-				R(flowRegion) = vec(3*N+1:4*N,i);
-				E(flowRegion) = vec(4*N+1:5*N,i);
+				U(flowRegion) = vec(1:N,nModes(i));
+				V(flowRegion) = vec(N+1:2*N,nModes(i));
+				W(flowRegion) = vec(2*N+1:3*N,nModes(i));
+				R(flowRegion) = vec(3*N+1:4*N,nModes(i));
+				E(flowRegion) = vec(4*N+1:5*N,nModes(i));
 				
 				modes.U(:,:,1,i) = U;
 				modes.V(:,:,1,i) = V;
@@ -788,4 +795,39 @@ function cleanUpFunction(caseFolder,caseNameInstability)
 			system(['rm -r ' caseFolder '/Instability']);
 		end
 	end
+end
+
+function p_row = get_p_row(baseFile,p_row_max)
+
+    addpath source
+    addpath source/boundaries
+    
+    
+    eval(baseFile)
+    p_row = p_row_max;
+    p_col = 1;
+    while p_row > 0
+        try
+            p_row
+            meshAddFixedPoints
+
+            % Run mesh generator
+            [mesh.X, mesh.x, mesh.nx] = generateMesh(domain.xi,domain.xf,mesh.x,'X');
+            [mesh.Y, mesh.y, mesh.ny] = generateMesh(domain.yi,domain.yf,mesh.y,'Y');
+            [mesh.Z, mesh.z, mesh.nz] = generateMesh(domain.zi,domain.zf,mesh.z,'Z');
+
+            %% Select boundary conditions
+            [boundary,mesh] = getBoundaryConditions(flowType,mesh,flowParameters,[numMethods.neumannOrder numMethods.neumann2Order]);
+
+            domainSlicesY = getDomainSlices(mesh.ny,p_row);
+            domainSlicesZ = getDomainSlices(mesh.nz,p_col);
+
+            [~] = initBoundaries(boundary,mesh,domainSlicesY,domainSlicesZ,p_row,p_col);
+            
+            return
+        catch
+            p_row = p_row - 1;
+        end
+    end
+
 end
