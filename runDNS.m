@@ -87,7 +87,7 @@ fprintf('Mesh size: %d x %d x %d\n', mesh.nx, mesh.ny, mesh.nz)
 if genInitialFlow % If there is no previous run, generate new initial flow
     fprintf('Generating new initial flow\n');
      %Compute initial flow
-    flow = generateInitialFlow(mesh,flowParameters,flowType.initial,boundary.insideWall);
+    flow = generateInitialFlow(mesh,flowParameters,flowType.initial,boundary.insideWall,flowType.name);
 
     % Save initial flow to file
     flowToSave = flow;
@@ -104,7 +104,7 @@ if genInitialFlow % If there is no previous run, generate new initial flow
 			flowTypeTemp.initial.meshFile = flowType.initial.meshFile;
         end
 		
-		meanFlow = generateInitialFlow(mesh,flowParameters,flowTypeTemp.initial,boundary.insideWall);
+		meanFlow = generateInitialFlow(mesh,flowParameters,flowTypeTemp.initial,boundary.insideWall,flowType.name);
 
 		% Save initial flow to file
 		flowToSave = meanFlow;

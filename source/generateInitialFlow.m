@@ -1,5 +1,4 @@
-function flow = generateInitialFlow(mesh,flowParameters,initialFlow,walls)
-
+function flow = generateInitialFlow(mesh,flowParameters,initialFlow,walls,flowName)
 % This function defines each type of initial flow. New types may be added here if needed
 
 nx = mesh.nx;
@@ -27,13 +26,15 @@ switch initialFlow.type
         
         [~,y0ind] = min(abs(Y));
         
-        U(:,1:y0ind,:) = 0;
+        if nargin == 4 || contains(flowName, 'boundaryLayer');
+            U(:,1:y0ind,:) = 0;
+        end
 
         if isfield(initialFlow,'U0')
             U = initialFlow.U0*U;
         end
         
-    case 'poiseulle'
+    case 'poiseuille'
         
         U = zeros(nx,ny,nz);
         V = zeros(nx,ny,nz);
@@ -41,11 +42,13 @@ switch initialFlow.type
         R = ones(nx,ny,nz);
         E = ones(nx,ny,nz) * E0;
 
-        U = U + mesh.Y/(mesh.Y(end) - mesh.Y(1));
+        eta = (Y-Y(1))/(Y(end)-Y(1));
 
-        if isfield(initialFlow,'U0')
-            U = initialFlow.U0*U;
-        end
+        u0 = flowParameters.U0;
+        u1 = flowParameters.lowerWallVelocity;
+        u2 = flowParameters.upperWallVelocity;
+
+        U = U + (-6*u0 +3*u1 +3*u2)*eta.^2 + (6*u0 -4*u1 -2*u2)*eta + u1;
 
     case 'blasius'
 

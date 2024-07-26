@@ -137,7 +137,7 @@ end
 var{end+1} = 'u';
 type{end+1} = 'dir';
 dir{end+1} = 'yi';
-val(end+1) = mesh.Y(1)/(mesh.Y(end)-mesh.Y(1));
+val(end+1) = flowParameters.lowerWallVelocity;
 xi(end+1) = 1;
 xf(end+1) = mesh.nx;
 yi(end+1) = 1;
@@ -148,7 +148,7 @@ zf(end+1) = mesh.nz;
 var{end+1} = 'u';
 type{end+1} = 'dir';
 dir{end+1} = 'yf';
-val(end+1) = mesh.Y(end)/(mesh.Y(end)-mesh.Y(1));
+val(end+1) = flowParameters.upperWallVelocity;
 xi(end+1) = 1;
 xf(end+1) = mesh.nx;
 yi(end+1) = mesh.ny;

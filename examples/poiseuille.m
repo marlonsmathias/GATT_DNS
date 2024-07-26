@@ -1,10 +1,11 @@
-Re = 1000;
+Re = 2000;
 Ma = 0.5;
 L = 4;
 H = 1;
+dpdx = 16/Re;
 
 %% Case name
-caseName = ['Poiseulle-Re' num2str(Re) '-Ma' strrep(num2str(Ma),'.','') '-L' num2str(L) '-H' num2str(H)];
+caseName = ['Poiseuille-Re' num2str(Re) '-Ma' strrep(num2str(Ma),'.','') '-L' num2str(L) '-H' num2str(H)];
 
 %% Domain decomposition
 p_row = 10;
@@ -26,14 +27,28 @@ domain.zi = 0;
 domain.zf = 1;
 
 %% Flow type
-flowType.name = 'poiseulleFlow';
+flowType.name = 'poiseuilleFlow';
+flowParameters.U0 = 1; % Initial mean velocity
+flowParameters.lowerWallVelocity = 0;
+flowParameters.upperWallVelocity = 0;
 
-flowType.initial.type = 'poiseulle'; % uniform, blasius or file
+flowType.initial.type = 'uniform'; % uniform, blasius or file
 flowType.initial.addNoise = 1e-4;
+
+flowType.disturb{1}.x = [-inf inf];
+flowType.disturb{1}.y = [-inf inf];
+flowType.disturb{1}.z = [-inf inf];
+flowType.disturb{1}.var = 'RU';
+flowType.disturb{1}.type = 'pressureGradient';
+flowType.disturb{1}.extraNodes = [0 0 0 0 0 0];
+flowType.disturb{1}.par = [dpdx];
+flowType.disturb{1}.active = true;
+flowType.disturb{1}.fitPoints = false;
+flowType.disturb{1}.forcing = true;
 
 %% Mesh parameters
 mesh.x.n = 100;
-mesh.y.n = 100;
+mesh.y.n = 200;
 mesh.z.n = 1;
 
 % Available mesh types and their specific parameters are:
@@ -89,7 +104,7 @@ time.tmax = 1000;
 
 logAll = 25;
 
-mesh.trackedPoints = [];
+mesh.trackedPoints = [0,0,0];
 
 mesh.trackedNorm = true;
 
