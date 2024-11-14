@@ -162,6 +162,8 @@ time.maxCFL = 1.3;
 time.qtimes = 100;
 time.tmax = 10000;
 
+time.saveDerivs = false;
+
 logAll = 25;
 
 trackedX = 0:50:domain.xf;

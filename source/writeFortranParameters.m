@@ -91,6 +91,13 @@ function writeFortranParameters(caseName,mesh,flowParameters,time,numMethods,log
     fprintf(outFile,'    integer :: p_row = %d\n',p_row);
     fprintf(outFile,'    integer :: p_col = %d\n',p_col);
     
+
+    if isfield(time,'saveDerivs') && time.saveDerivs
+        fprintf(outFile,'    logical :: saveDerivs = .TRUE.\n');
+    else
+        fprintf(outFile,'    logical :: saveDerivs = .FALSE.\n');
+    end
+
     fclose(outFile);
 
 end

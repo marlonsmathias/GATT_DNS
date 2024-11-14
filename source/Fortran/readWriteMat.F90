@@ -226,6 +226,131 @@ module readWriteMat
 
 
     end subroutine
+
+
+    subroutine writeFlowDeriv(timeStep,t,U,V,W,R,E,Udot,Vdot,Wdot,Rdot,Edot)
+
+
+    ! DECLARE VARIABLES
+    implicit none
+
+    ! Inputs
+    integer, intent(in) :: timeStep
+    real*8, intent(in) :: t
+    real*8, dimension(:,:,:), intent(in) :: U, V, W, R, E, Udot, Vdot, Wdot, Rdot, Edot
+
+    ! Internals
+    mwPointer :: matOpen, matClose, matPutVariable, mxGetPr
+    mwPointer :: filePointer, mxCreateNumericArray
+    mwPointer :: varPointerT, dataPointerT
+    mwPointer :: varPointerU, dataPointerU
+    mwPointer :: varPointerV, dataPointerV
+    mwPointer :: varPointerW, dataPointerW
+    mwPointer :: varPointerR, dataPointerR
+    mwPointer :: varPointerE, dataPointerE
+    mwPointer :: varPointerUdot, dataPointerUdot
+    mwPointer :: varPointerVdot, dataPointerVdot
+    mwPointer :: varPointerWdot, dataPointerWdot
+    mwPointer :: varPointerRdot, dataPointerRdot
+    mwPointer :: varPointerEdot, dataPointerEdot
+    mwSize :: fileSize, fileSize1
+    mwSize :: numberOfDimensions, numberOfDimensions1
+    integer*8 :: dims(3), dims1
+    integer*4 :: writeStatus, classID, mxClassIDFromClassName, complexFlag
+    character(len=10) :: timeChar
+
+    ! GET DATA SIZE
+    numberOfDimensions = 3
+    numberOfDimensions1 = 1
+    dims = shape(U)
+    dims1 = 1
+    fileSize = dims(1)*dims(2)*dims(3)
+    fileSize1 = 1
+
+    ! OPEN MAT FILE
+    write(timeChar,fmt='(i10.10)') timeStep
+	
+	if(timeStep.lt.0) then
+		filePointer = matOpen('../flow_diverged.mat', 'w7.3')
+	else
+		filePointer = matOpen('../flow_'//timeChar//'.mat', 'w7.3')
+	end if
+	
+    
+
+    ! GET POINTERS
+    classID = mxClassIDFromClassName('double')
+    complexFlag = 0
+    
+    dataPointerT = mxCreateNumericArray(numberOfDimensions1, dims1, classID, complexFlag)
+    varPointerT = mxGetPr(dataPointerT)
+    dataPointerU = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerU = mxGetPr(dataPointerU)
+    dataPointerV = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerV = mxGetPr(dataPointerV)
+    dataPointerW = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerW = mxGetPr(dataPointerW)
+    dataPointerR = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerR = mxGetPr(dataPointerR)
+    dataPointerE = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerE = mxGetPr(dataPointerE)
+
+    dataPointerUdot = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerUdot = mxGetPr(dataPointerUdot)
+    dataPointerVdot = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerVdot = mxGetPr(dataPointerVdot)
+    dataPointerWdot = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerWdot = mxGetPr(dataPointerWdot)
+    dataPointerRdot = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerRdot = mxGetPr(dataPointerRdot)
+    dataPointerEdot = mxCreateNumericArray(numberOfDimensions, dims, classID, complexFlag)
+    varPointerEdot = mxGetPr(dataPointerEdot)
+
+    ! COPY DATA TO POINTER
+    call mxCopyReal8ToPtr(t, varPointerT, fileSize1)
+    call mxCopyReal8ToPtr(U, varPointerU, fileSize)
+    call mxCopyReal8ToPtr(V, varPointerV, fileSize)
+    call mxCopyReal8ToPtr(W, varPointerW, fileSize)
+    call mxCopyReal8ToPtr(R, varPointerR, fileSize)
+    call mxCopyReal8ToPtr(E, varPointerE, fileSize)
+
+    call mxCopyReal8ToPtr(Udot, varPointerUdot, fileSize)
+    call mxCopyReal8ToPtr(Vdot, varPointerVdot, fileSize)
+    call mxCopyReal8ToPtr(Wdot, varPointerWdot, fileSize)
+    call mxCopyReal8ToPtr(Rdot, varPointerRdot, fileSize)
+    call mxCopyReal8ToPtr(Edot, varPointerEdot, fileSize)
+
+    ! WRITE VALUES
+    writeStatus = matPutVariable(filePointer, 't', dataPointerT)
+    writeStatus = matPutVariable(filePointer, 'U', dataPointerU)
+    writeStatus = matPutVariable(filePointer, 'V', dataPointerV)
+    writeStatus = matPutVariable(filePointer, 'W', dataPointerW)
+    writeStatus = matPutVariable(filePointer, 'R', dataPointerR)
+    writeStatus = matPutVariable(filePointer, 'E', dataPointerE)
+    writeStatus = matPutVariable(filePointer, 'Udot', dataPointerUdot)
+    writeStatus = matPutVariable(filePointer, 'Vdot', dataPointerVdot)
+    writeStatus = matPutVariable(filePointer, 'Wdot', dataPointerWdot)
+    writeStatus = matPutVariable(filePointer, 'Rdot', dataPointerRdot)
+    writeStatus = matPutVariable(filePointer, 'Edot', dataPointerEdot)
+
+	! DEALLOCATE MEMORY
+	call mxDestroyArray(dataPointerT)
+	call mxDestroyArray(dataPointerU)
+	call mxDestroyArray(dataPointerV)
+	call mxDestroyArray(dataPointerW)
+	call mxDestroyArray(dataPointerR)
+	call mxDestroyArray(dataPointerE)
+	call mxDestroyArray(dataPointerUdot)
+	call mxDestroyArray(dataPointerVdot)
+	call mxDestroyArray(dataPointerWdot)
+	call mxDestroyArray(dataPointerRdot)
+	call mxDestroyArray(dataPointerEdot)
+
+    ! CLOSE MAT FILE
+    filePointer = matClose(filePointer)
+
+
+    end subroutine
 	
 	
 	subroutine readMeanFlow(U,V,W,R,E)

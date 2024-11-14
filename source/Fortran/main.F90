@@ -44,8 +44,8 @@
     integer, dimension(:), allocatable :: cAdiabatic ! Adiabatic flag for corners
     
     ! Declare flow variables
-    real*8,  dimension(:,:,:), allocatable :: U,V,W,R,E
-    real*8,  dimension(:,:,:), allocatable :: Ug,Vg,Wg,Rg,Eg
+    real*8,  dimension(:,:,:), allocatable :: U,V,W,R,E,Udot,Vdot,Wdot,Rdot,Edot
+    real*8,  dimension(:,:,:), allocatable :: Ug,Vg,Wg,Rg,Eg,Udotg,Vdotg,Wdotg,Rdotg,Edotg
     logical, dimension(:,:,:), allocatable :: insideWall
     real*8,  dimension(:,:,:), allocatable :: Umean,Vmean,Wmean,Rmean,Emean
     real*8,  dimension(:,:,:), allocatable :: Unew,Vnew,Wnew,Rnew,Enew
@@ -85,12 +85,26 @@
     allocate(W(xstart(1):xend(1), xstart(2):xend(2), xstart(3):xend(3)))
     allocate(R(xstart(1):xend(1), xstart(2):xend(2), xstart(3):xend(3)))
     allocate(E(xstart(1):xend(1), xstart(2):xend(2), xstart(3):xend(3)))
-    
+
     U = 0
     V = 0
     W = 0
     R = 0
     E = 0
+
+    if(saveDerivs) then
+        allocate(Udot(xstart(1):xend(1), xstart(2):xend(2), xstart(3):xend(3)))
+        allocate(Vdot(xstart(1):xend(1), xstart(2):xend(2), xstart(3):xend(3)))
+        allocate(Wdot(xstart(1):xend(1), xstart(2):xend(2), xstart(3):xend(3)))
+        allocate(Rdot(xstart(1):xend(1), xstart(2):xend(2), xstart(3):xend(3)))
+        allocate(Edot(xstart(1):xend(1), xstart(2):xend(2), xstart(3):xend(3)))
+    
+        Udot = 0
+        Vdot = 0
+        Wdot = 0
+        Rdot = 0
+        Edot = 0
+    endif
     
     include 'importFlow.F90'
     
@@ -433,6 +447,14 @@
 			stop
 		endif
 		
+        if(saveDerivs) then
+            Udot = (Unew-U)/dt
+            Vdot = (Vnew-V)/dt
+            Wdot = (Wnew-W)/dt
+            Rdot = (Rnew-R)/dt
+            Edot = (Enew-E)/dt
+        endif
+
 		! Update flow
 		U = Unew
         V = Vnew

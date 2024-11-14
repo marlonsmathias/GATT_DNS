@@ -10,6 +10,14 @@
         allocate(Wg(nx,ny,nz))
         allocate(Rg(nx,ny,nz))
         allocate(Eg(nx,ny,nz))
+
+        if(saveDerivs) then
+            allocate(Udotg(nx,ny,nz))
+            allocate(Vdotg(nx,ny,nz))
+            allocate(Wdotg(nx,ny,nz))
+            allocate(Rdotg(nx,ny,nz))
+            allocate(Edotg(nx,ny,nz))
+        endif
         
         allocate(insideWall(nx,ny,nz))
         
